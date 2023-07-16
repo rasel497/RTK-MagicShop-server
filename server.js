@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const morgan = require('morgan');
 const mysql = require('mysql');
 
 const app = express();
@@ -7,6 +8,7 @@ const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+app.use(morgan('tiny'));
 
 // connect express js server and mysql DB
 const db = mysql.createConnection({
@@ -25,19 +27,6 @@ app.get('/users/', (req, res) => {
         return res.send(result)
     });
 });
-
-//set users
-// app.get('/user/:id', (req, res) => {
-//     const id = req.params.id
-//     console.log(id)
-//     const sql = `SELECT * FROM users WHERE id=${id}`;
-//     db.query(sql, (err, result) => {
-//         if (err)
-//             return res.send({ Message: 'Error inside the server' });
-//         return res.send(result)
-//     });
-// });
-
 
 // successfully create/registration user
 app.post('/userRegistration/', (req, res) => {
@@ -75,11 +64,33 @@ app.post('/userLogin/', (req, res) => {
     });
 });
 
+//------------------------Product Section---------------------------//
+// app.get('/user/:id', (req, res) => {
+//     const id = req.params.id
+//     console.log(id)
+//     const sql = `SELECT * FROM users WHERE id=${id}`
+//     db.query(sql, (err, result) => {
+//         if (err)
+//             return res.send({ Message: 'Error inside the server' });
+//         return res.send(result)
+//     });
+// });
+
+//  set my all product in UI Home page
+app.get('/myProducts/', (req, res) => {
+    const sql = "SELECT * FROM products";
+    db.query(sql, (err, result) => {
+        if (err)
+            return res.send({ Message: 'Error inside the server' });
+        return res.send(result);
+    });
+});
+
+
 // initial server test
 app.get('/', (req, res) => {
     res.send('Login auth server is running');
 });
 app.listen(port, () => {
-    console.log(`Auth server is running on ${port}`)
+    console.log(`Server is running on ${port}`)
 });
-
