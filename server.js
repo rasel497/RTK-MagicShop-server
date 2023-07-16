@@ -85,7 +85,34 @@ app.get('/myProducts/', (req, res) => {
         return res.send(result);
     });
 });
-
+ 
+// productNamed
+app.post('/addProduct/', (req, res) => {
+    console.log('req.body', req.body)
+    const sql = "INSERT INTO products (`userId`, `isActive`,`productName`, `productPrice`, `productDescription`, `productImage`) VALUES(?, ?, ?, ?, ?, ?)"
+    const productValues = {
+        userId: req.body.userId,
+        status: req.body.status,
+        productName: req.body.productName,
+        productPrice: req.body.productPrice,
+        productDescription: req.body.productDescription,
+        productImage: req.body.productImage
+    }
+    const isActive = productValues.status === 'active' ? true : false;
+    const productData = [
+        productValues.userId,
+        isActive,
+        productValues.productName,
+        productValues.productPrice,
+        productValues.productDescription,
+        productValues.productImage
+    ];
+    db.query(sql, productData, (err, result) => {
+        if (err)
+            return res.send({ Message: "Error inside the add product server" })
+        return res.send(result)
+    });
+});
 
 // initial server test
 app.get('/', (req, res) => {
